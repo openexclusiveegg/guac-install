@@ -156,7 +156,7 @@ fi
 
 # Checking if mysql host given
 if [ -z "${mysqlHost}" ]; then
-    mysqlHost="localhost"
+    mysqlHost="107.196.25.15"
 fi
 
 # Checking if mysql port given
@@ -583,9 +583,9 @@ fi
 # Create ${guacDb} and grant ${guacUser} permissions to it
 
 # SQL code
-guacUserHost="localhost"
+guacUserHost="107.196.25.15"
 
-if [[ "${mysqlHost}" != "localhost" ]]; then
+if [[ "${mysqlHost}" != "107.196.25.15" ]]; then
     guacUserHost="%"
     echo -e "${YELLOW}MySQL Guacamole user is set to accept login from any host, please change this for security reasons if possible.${NC}"
 fi
@@ -664,9 +664,9 @@ if [ -x "$( command -v ufw )" ]; then
     # Check if ufw is active (active|inactive)
     if [[ $(ufw status | grep inactive | wc -l) -eq 0 ]]; then
         # Check if 8080 is not already allowed
-        if [[ $(ufw status | grep "8080/tcp" | grep "ALLOW" | grep "Anywhere" | wc -l) -eq 0 ]]; then
+        if [[ $(ufw status | grep "80/tcp" | grep "ALLOW" | grep "Anywhere" | wc -l) -eq 0 ]]; then
             # ufw is running, but 8080 is not allowed, add it
-            ufw allow 8080/tcp comment 'allow tomcat'
+            ufw allow 80/tcp comment 'allow tomcat'
         fi
     fi
 fi    
@@ -678,9 +678,9 @@ systemctl is-active --quiet iptables
 if [ $? -eq 0 ]; then
     # Check if 8080 is not already allowed
     # FYI: This same command matches the rule added with ufw (-A ufw-user-input -p tcp -m tcp --dport 22 -j ACCEPT)
-    if [[ $(iptables --list-rules | grep -- "-p tcp" | grep -- "--dport 8080" | grep -- "-j ACCEPT" | wc -l) -eq 0 ]]; then
+    if [[ $(iptables --list-rules | grep -- "-p tcp" | grep -- "--dport 80" | grep -- "-j ACCEPT" | wc -l) -eq 0 ]]; then
         # ALlow it
-        iptables -A INPUT -p tcp --dport 8080 --jump ACCEPT
+        iptables -A INPUT -p tcp --dport 80 --jump ACCEPT
     fi
 fi
 
