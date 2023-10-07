@@ -156,7 +156,7 @@ fi
 
 # Checking if mysql host given
 if [ -z "${mysqlHost}" ]; then
-    mysqlHost="127.0.0.1"
+    mysqlHost="localhost"
 fi
 
 # Checking if mysql port given
@@ -583,9 +583,9 @@ fi
 # Create ${guacDb} and grant ${guacUser} permissions to it
 
 # SQL code
-guacUserHost="127.0.0.1"
+guacUserHost="localhost"
 
-if [[ "${mysqlHost}" != "127.0.0.1" ]]; then
+if [[ "${mysqlHost}" != "localhost" ]]; then
     guacUserHost="%"
     echo -e "${YELLOW}MySQL Guacamole user is set to accept login from any host, please change this for security reasons if possible.${NC}"
 fi
@@ -663,9 +663,9 @@ echo
 if [ -x "$( command -v ufw )" ]; then
     # Check if ufw is active (active|inactive)
     if [[ $(ufw status | grep inactive | wc -l) -eq 0 ]]; then
-        # Check if 8080 is not already allowed
+        # Check if 80 is not already allowed
         if [[ $(ufw status | grep "80/tcp" | grep "ALLOW" | grep "Anywhere" | wc -l) -eq 0 ]]; then
-            # ufw is running, but 8080 is not allowed, add it
+            # ufw is running, but 80 is not allowed, add it
             ufw allow 80/tcp comment 'allow tomcat'
         fi
     fi
@@ -676,7 +676,7 @@ fi
 # Check if iptables is a valid running service
 systemctl is-active --quiet iptables
 if [ $? -eq 0 ]; then
-    # Check if 8080 is not already allowed
+    # Check if 80 is not already allowed
     # FYI: This same command matches the rule added with ufw (-A ufw-user-input -p tcp -m tcp --dport 22 -j ACCEPT)
     if [[ $(iptables --list-rules | grep -- "-p tcp" | grep -- "--dport 80" | grep -- "-j ACCEPT" | wc -l) -eq 0 ]]; then
         # ALlow it
@@ -695,7 +695,7 @@ unset MYSQL_PWD
 echo
 
 # Done
-echo -e "${BLUE}Installation Complete\n- Visit: http://localhost:8080/guacamole/\n- Default login (username/password): guacadmin/guacadmin\n***Be sure to change the password***.${NC}"
+echo -e "${BLUE}Installation Complete\n- Visit: http://localhost:80/guacamole/\n- Default login (username/password): guacadmin/guacadmin\n***Be sure to change the password***.${NC}"
 
 if [ "${installDuo}" = true ]; then
     echo -e "${YELLOW}\nDon't forget to configure Duo in guacamole.properties. You will not be able to login otherwise.\nhttps://guacamole.apache.org/doc/${GUACVERSION}/gug/duo-auth.html${NC}"
