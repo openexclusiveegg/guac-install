@@ -156,7 +156,7 @@ fi
 
 # Checking if mysql host given
 if [ -z "${mysqlHost}" ]; then
-    mysqlHost="107.196.25.15"
+    mysqlHost="127.0.0.1"
 fi
 
 # Checking if mysql port given
@@ -583,9 +583,9 @@ fi
 # Create ${guacDb} and grant ${guacUser} permissions to it
 
 # SQL code
-guacUserHost="107.196.25.15"
+guacUserHost="127.0.0.1"
 
-if [[ "${mysqlHost}" != "107.196.25.15" ]]; then
+if [[ "${mysqlHost}" != "127.0.0.1" ]]; then
     guacUserHost="%"
     echo -e "${YELLOW}MySQL Guacamole user is set to accept login from any host, please change this for security reasons if possible.${NC}"
 fi
